@@ -1322,6 +1322,16 @@
 #define SDL_LoadJPG_IO IGNORE_THIS_VERSION_OF_SDL_LoadJPG_IO
 #define SDL_LoadJPG IGNORE_THIS_VERSION_OF_SDL_LoadJPG
 #define SDL_HasSVE2 IGNORE_THIS_VERSION_OF_SDL_HasSVE2
+#define SDL_GamepadHasCapSense IGNORE_THIS_VERSION_OF_SDL_GamepadHasCapSense
+#define SDL_GetGamepadCapSense IGNORE_THIS_VERSION_OF_SDL_GetGamepadCapSense
+#define SDL_aligned_alloc_zero IGNORE_THIS_VERSION_OF_SDL_aligned_alloc_zero
+#define SDL_wcstoul IGNORE_THIS_VERSION_OF_SDL_wcstoul
+#define SDL_wcstoll IGNORE_THIS_VERSION_OF_SDL_wcstoll
+#define SDL_wcstoull IGNORE_THIS_VERSION_OF_SDL_wcstoull
+#define SDL_RequestNotificationPermission IGNORE_THIS_VERSION_OF_SDL_RequestNotificationPermission
+#define SDL_ShowNotificationWithProperties IGNORE_THIS_VERSION_OF_SDL_ShowNotificationWithProperties
+#define SDL_ShowNotification IGNORE_THIS_VERSION_OF_SDL_ShowNotification
+#define SDL_RemoveNotification IGNORE_THIS_VERSION_OF_SDL_RemoveNotification
 
 
 #define SDL_FUNCTION_POINTER_IS_VOID_POINTER 1
@@ -6502,6 +6512,46 @@
 
 #ifdef SDL_HasSVE2
 #undef SDL_HasSVE2
+#endif
+
+#ifdef SDL_GamepadHasCapSense
+#undef SDL_GamepadHasCapSense
+#endif
+
+#ifdef SDL_GetGamepadCapSense
+#undef SDL_GetGamepadCapSense
+#endif
+
+#ifdef SDL_aligned_alloc_zero
+#undef SDL_aligned_alloc_zero
+#endif
+
+#ifdef SDL_wcstoul
+#undef SDL_wcstoul
+#endif
+
+#ifdef SDL_wcstoll
+#undef SDL_wcstoll
+#endif
+
+#ifdef SDL_wcstoull
+#undef SDL_wcstoull
+#endif
+
+#ifdef SDL_RequestNotificationPermission
+#undef SDL_RequestNotificationPermission
+#endif
+
+#ifdef SDL_ShowNotificationWithProperties
+#undef SDL_ShowNotificationWithProperties
+#endif
+
+#ifdef SDL_ShowNotification
+#undef SDL_ShowNotification
+#endif
+
+#ifdef SDL_RemoveNotification
+#undef SDL_RemoveNotification
 #endif
 
 

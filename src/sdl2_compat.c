@@ -58,7 +58,7 @@ This breaks the build when creating SDL_ ## DisableScreenSaver
  * The number might increment past 90 if there are a ton of releases.
  */
 #define SDL2_COMPAT_VERSION_MINOR 32
-#define SDL2_COMPAT_VERSION_PATCH 69
+#define SDL2_COMPAT_VERSION_PATCH 71
 
 #ifndef SDL2COMPAT_REVISION
 #define SDL2COMPAT_REVISION "SDL-2." STRINGIFY(SDL2_COMPAT_VERSION_MINOR) "." STRINGIFY(SDL2_COMPAT_VERSION_PATCH) "-no-vcs"
@@ -270,18 +270,27 @@ SDL2COMPAT_itoa(char *dst, int val)
 }
 
 /* you can use SDL3_strlen once we're past startup. */
-static int SDL2Compat_strlen(const char *str)
+static size_t SDL2Compat_strlen(const char *str)
 {
-    volatile int retval = 0;  /* volatile prevents gcc from optimizing this into strlen() */
-    while (str[retval]) {
-        retval++;
+#ifdef SDL_PLATFORM_WINDOWS
+    /* volatile prevents gcc from optimizing this into a call to the
+     * strlen() library function, which we are intentionally avoiding on
+     * Windows: see #340 */
+    volatile const char *ptr = str;
+    while (*ptr) {
+        ++ptr;
     }
-    return retval;
+    return (size_t)(ptr - str);
+#else
+    /* On other platforms we rely on libc */
+    return strlen (str);
+#endif
 }
 
 /* you can use SDL3_strcmp once we're past startup. */
 static bool SDL2Compat_strequal(const char *a, const char *b)
 {
+#ifdef SDL_PLATFORM_WINDOWS
     while (true) {
         const char cha = *a;
         if (cha != *b) {
@@ -293,11 +302,15 @@ static bool SDL2Compat_strequal(const char *a, const char *b)
         b++;
     }
     return true;
+#else
+    return (strcmp (a, b) == 0);
+#endif
 }
 
 /* you can use SDL3_strrchr once we're past startup. */
 static char *SDL2Compat_strrchr(const char *string, int c)
 {
+#ifdef SDL_PLATFORM_WINDOWS
     const char *bufp = string + SDL2Compat_strlen(string);
     while (bufp >= string) {
         if (*bufp == c) {
@@ -306,6 +319,9 @@ static char *SDL2Compat_strrchr(const char *string, int c)
         --bufp;
     }
     return NULL;
+#else
+    return (char *) strrchr (string, c);
+#endif
 }
 
 /* log a string using platform-specific code for before SDL3 is fully available. */
@@ -895,7 +911,7 @@ SDL2Compat_ApplyQuirks(bool force_x11)
     if (WantDebugLogging) {
         const char *lead = "sdl2-compat: This app appears to be named:";
         char msg[256];
-        if ((SDL2Compat_strlen(lead) + SDL2Compat_strlen(exe_name) + 2) <= (int) (sizeof (msg))) {
+        if (SDL2Compat_strlen(exe_name) <= sizeof (msg) - (SDL2Compat_strlen(lead) + 2)) {
             char *p = msg;
             p = SDL2COMPAT_stpcpy(p, lead);
             p = SDL2COMPAT_stpcpy(p, " ");
@@ -2802,6 +2818,14 @@ EventFilter3to2(void *userdata, SDL_Event *event3)
         case SDL_EVENT_CAMERA_DEVICE_DENIED:
         case SDL_EVENT_RENDER_DEVICE_LOST:
             return false;
+        case SDL_EVENT_GAMEPAD_BUTTON_DOWN:
+        case SDL_EVENT_GAMEPAD_BUTTON_UP:
+            if (event3->gbutton.button >= SDL_CONTROLLER_BUTTON_MAX) {
+                return false;
+            }
+            break;
+        default:
+            break;
     }
 
     GestureProcessEvent(event3);  /* this might need to generate new gesture events from touch input. */
@@ -4550,6 +4574,7 @@ SDL_LowerBlit(SDL2_Surface *src2, SDL_Rect *srcrect, SDL2_Surface *dst2, SDL_Rec
     SDL_Surface *dst = Surface2to3(dst2);
     int result = SDL3_BlitSurfaceUnchecked(src, srcrect, dst, dstrect) ? 0 : -1;
     SynchronizeSurface3to2(src, src2);
+    SynchronizeSurface3to2(dst, dst2);
     return result;
 }
 
@@ -4720,6 +4745,7 @@ SDL_LowerBlitScaled(SDL2_Surface *src2, SDL_Rect *srcrect, SDL2_Surface *dst2, S
     SDL_Surface *dst = Surface2to3(dst2);
     int result = SDL3_BlitSurfaceUncheckedScaled(src, srcrect, dst, dstrect, SDL_SCALEMODE_NEAREST) ? 0 : -1;
     SynchronizeSurface3to2(src, src2);
+    SynchronizeSurface3to2(dst, dst2);
     return result;
 }
 
@@ -9188,15 +9214,23 @@ WindowPos2To3(int *x, int *y)
     }
 }
 
-static void StartTextInputForWindow(SDL_Window *window)
+static void StartTextInputForWindow(SDL_Window *window, bool implicit)
 {
     SDL_PropertiesID props = SDL3_CreateProperties();
+    const char *hint = SDL3_GetHint(SDL_HINT_ENABLE_SCREEN_KEYBOARD);
 
     SDL3_SetNumberProperty(props, SDL_PROP_TEXTINPUT_TYPE_NUMBER, SDL_TEXTINPUT_TYPE_TEXT);
     SDL3_SetNumberProperty(props, SDL_PROP_TEXTINPUT_CAPITALIZATION_NUMBER, SDL_CAPITALIZE_NONE);
     SDL3_SetBooleanProperty(props, SDL_PROP_TEXTINPUT_AUTOCORRECT_BOOLEAN, false);
 
+    /* SDL2 didn't open the screen keyboard when text input was started implicitly via SDL_VideoInit() */
+    if (implicit && !hint) {
+        SDL3_SetHint(SDL_HINT_ENABLE_SCREEN_KEYBOARD, "0");
+    }
     SDL3_StartTextInputWithProperties(window, props);
+    if (implicit && !hint) {
+        SDL3_SetHint(SDL_HINT_ENABLE_SCREEN_KEYBOARD, NULL);
+    }
 
     SDL3_DestroyProperties(props);
 }
@@ -9205,7 +9239,7 @@ static void FinishWindowCreation(SDL_Window *window)
 {
     /* SDL3 has per-window text input, so we must enable on this window if it's active */
     if (SDL_IsTextInputActive()) {
-        StartTextInputForWindow(window);
+        StartTextInputForWindow(window, true);
     }
 }
 
@@ -9527,7 +9561,7 @@ SDL_StartTextInput(void)
         int i;
 
         for (i = 0; windows[i]; ++i) {
-            StartTextInputForWindow(windows[i]);
+            StartTextInputForWindow(windows[i], false);
         }
 
         SDL3_free(windows);
