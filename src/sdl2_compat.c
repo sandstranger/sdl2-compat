@@ -401,11 +401,11 @@ static char loaderror[256];
         /* I don't know if this is the _right_ order to try, but this seems reasonable */
         static const char * const dylib_locations[] = {
             "@loader_path/" SDL3_LIBNAME, /* MyApp.app/Contents/MacOS/libSDL3.dylib */
-            "@loader_path/../Frameworks/" SDL3_FRAMEWORK, /* MyApp.app/Contents/Frameworks/SDL2.framework */
+            "@loader_path/../Frameworks/" SDL3_FRAMEWORK, /* MyApp.app/Contents/Frameworks/SDL3.framework */
             "@executable_path/" SDL3_LIBNAME, /* MyApp.app/Contents/MacOS/libSDL3.dylib */
-            "@executable_path/../Frameworks/" SDL3_FRAMEWORK, /* MyApp.app/Contents/Frameworks/SDL2.framework */
-            NULL,  /* /Users/username/Library/Frameworks/SDL2.framework */
-            "/Library/Frameworks" SDL3_FRAMEWORK, /* /Library/Frameworks/SDL2.framework */
+            "@executable_path/../Frameworks/" SDL3_FRAMEWORK, /* MyApp.app/Contents/Frameworks/SDL3.framework */
+            NULL,  /* /Users/username/Library/Frameworks/SDL3.framework */
+            "/Library/Frameworks/" SDL3_FRAMEWORK, /* /Library/Frameworks/SDL3.framework */
             SDL3_LIBNAME /* oh well, anywhere the system can see the .dylib (/usr/local/lib or whatever) */
         };
 
