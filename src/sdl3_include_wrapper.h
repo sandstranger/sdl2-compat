@@ -1336,6 +1336,18 @@
 #define SDL_GetDeviceFormFactorName IGNORE_THIS_VERSION_OF_SDL_GetDeviceFormFactorName
 #define SDL_IsUbuntuTouch IGNORE_THIS_VERSION_OF_SDL_IsUbuntuTouch
 #define SDL_GetNumProperties IGNORE_THIS_VERSION_OF_SDL_GetNumProperties
+#define SDL_JoystickHasSensor IGNORE_THIS_VERSION_OF_SDL_JoystickHasSensor
+#define SDL_SetJoystickSensorEnabled IGNORE_THIS_VERSION_OF_SDL_SetJoystickSensorEnabled
+#define SDL_JoystickSensorEnabled IGNORE_THIS_VERSION_OF_SDL_JoystickSensorEnabled
+#define SDL_GetJoystickSensorDataRate IGNORE_THIS_VERSION_OF_SDL_GetJoystickSensorDataRate
+#define SDL_GetJoystickSensorData IGNORE_THIS_VERSION_OF_SDL_GetJoystickSensorData
+#define SDL_SetRenderViewportFloat IGNORE_THIS_VERSION_OF_SDL_SetRenderViewportFloat
+#define SDL_GetRenderViewportFloat IGNORE_THIS_VERSION_OF_SDL_GetRenderViewportFloat
+#define SDL_SetRenderClipRectFloat IGNORE_THIS_VERSION_OF_SDL_SetRenderClipRectFloat
+#define SDL_GetRenderClipRectFloat IGNORE_THIS_VERSION_OF_SDL_GetRenderClipRectFloat
+#define SDL_GetOpenHarmonySDKVersion IGNORE_THIS_VERSION_OF_SDL_GetOpenHarmonySDKVersion
+#define SDL_GetOpenHarmonyInternalStoragePath IGNORE_THIS_VERSION_OF_SDL_GetOpenHarmonyInternalStoragePath
+#define SDL_RequestOpenHarmonyPermission IGNORE_THIS_VERSION_OF_SDL_RequestOpenHarmonyPermission
 
 
 #define SDL_FUNCTION_POINTER_IS_VOID_POINTER 1
@@ -6572,6 +6584,54 @@
 
 #ifdef SDL_GetNumProperties
 #undef SDL_GetNumProperties
+#endif
+
+#ifdef SDL_JoystickHasSensor
+#undef SDL_JoystickHasSensor
+#endif
+
+#ifdef SDL_SetJoystickSensorEnabled
+#undef SDL_SetJoystickSensorEnabled
+#endif
+
+#ifdef SDL_JoystickSensorEnabled
+#undef SDL_JoystickSensorEnabled
+#endif
+
+#ifdef SDL_GetJoystickSensorDataRate
+#undef SDL_GetJoystickSensorDataRate
+#endif
+
+#ifdef SDL_GetJoystickSensorData
+#undef SDL_GetJoystickSensorData
+#endif
+
+#ifdef SDL_SetRenderViewportFloat
+#undef SDL_SetRenderViewportFloat
+#endif
+
+#ifdef SDL_GetRenderViewportFloat
+#undef SDL_GetRenderViewportFloat
+#endif
+
+#ifdef SDL_SetRenderClipRectFloat
+#undef SDL_SetRenderClipRectFloat
+#endif
+
+#ifdef SDL_GetRenderClipRectFloat
+#undef SDL_GetRenderClipRectFloat
+#endif
+
+#ifdef SDL_GetOpenHarmonySDKVersion
+#undef SDL_GetOpenHarmonySDKVersion
+#endif
+
+#ifdef SDL_GetOpenHarmonyInternalStoragePath
+#undef SDL_GetOpenHarmonyInternalStoragePath
+#endif
+
+#ifdef SDL_RequestOpenHarmonyPermission
+#undef SDL_RequestOpenHarmonyPermission
 #endif
 
 
