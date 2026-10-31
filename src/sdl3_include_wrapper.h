@@ -1349,6 +1349,11 @@
 #define SDL_GetOpenHarmonyInternalStoragePath IGNORE_THIS_VERSION_OF_SDL_GetOpenHarmonyInternalStoragePath
 #define SDL_RequestOpenHarmonyPermission IGNORE_THIS_VERSION_OF_SDL_RequestOpenHarmonyPermission
 #define SDL_GetAudioDeviceProperties IGNORE_THIS_VERSION_OF_SDL_GetAudioDeviceProperties
+#define SDL_SetSoftwareRendererWindow IGNORE_THIS_VERSION_OF_SDL_SetSoftwareRendererWindow
+#define SDL_SetSoftwareRendererSurface IGNORE_THIS_VERSION_OF_SDL_SetSoftwareRendererSurface
+#define SDL_EncodeURL IGNORE_THIS_VERSION_OF_SDL_EncodeURL
+#define SDL_SetRenderHDRHeadroom IGNORE_THIS_VERSION_OF_SDL_SetRenderHDRHeadroom
+#define SDL_GetRenderHDRHeadroom IGNORE_THIS_VERSION_OF_SDL_GetRenderHDRHeadroom
 
 
 #define SDL_FUNCTION_POINTER_IS_VOID_POINTER 1
@@ -6637,6 +6642,26 @@
 
 #ifdef SDL_GetAudioDeviceProperties
 #undef SDL_GetAudioDeviceProperties
+#endif
+
+#ifdef SDL_SetSoftwareRendererWindow
+#undef SDL_SetSoftwareRendererWindow
+#endif
+
+#ifdef SDL_SetSoftwareRendererSurface
+#undef SDL_SetSoftwareRendererSurface
+#endif
+
+#ifdef SDL_EncodeURL
+#undef SDL_EncodeURL
+#endif
+
+#ifdef SDL_SetRenderHDRHeadroom
+#undef SDL_SetRenderHDRHeadroom
+#endif
+
+#ifdef SDL_GetRenderHDRHeadroom
+#undef SDL_GetRenderHDRHeadroom
 #endif
 
 
